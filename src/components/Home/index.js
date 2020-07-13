@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, FlatList, Image } from 'react-native'
 import { Button, SearchBar, ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-community/async-storage';
 Icon.loadFont();
 
 export default class Home extends Component {
@@ -10,18 +10,50 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      searchText: "",
       data: [],
-      search: ''
+      filteredData: [],
+      favorites:[],
     }
   }
 
-  updateSearch = (search) => {
-    this.setState({ search });
-  };
+  search = (searchText) => {
+    this.setState({ searchText: searchText });
 
+    let filteredData = this.state.data.filter(function (item) {
+      return item.title.includes(searchText);
+    });
+
+    this.setState({ filteredData: filteredData });
+  }
+
+  setData = async (value) => {
+    
+    AsyncStorage.setItem('key', value);
+    console.log("Home -> setData -> value", value);    
+  }
+
+  setMultipleData = async (recipie) => {
+
+    const updatedFavorities  = [...this.state.favorites];
+    updatedFavorities.push(recipie);
+    this.setState({ favorites: updatedFavorities });
+    /*
+    const recipes = [['publisher', item.publisher ], ['title', item.title], ['image', item.image_url]]
+    AsyncStorage.multiSet(recipes), () => {
+      console.log('chegou')
+    }*/
+  }
+
+  showData = () => {
+    const value = AsyncStorage.getItem('key');
+    value.then(res => {
+      console.log("Home -> showData -> res", res)      
+    })
+  }
 
   loadRecipes = () => {
-    fetch('https://forkify-api.herokuapp.com/api/search?q={}')
+    fetch('https://forkify-api.herokuapp.com/api/search?q=pizza')
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -45,19 +77,21 @@ export default class Home extends Component {
             containerStyle={{ backgroundColor: 'white', borderRadius: 20 }}
             inputContainerStyle={{ backgroundColor: 'white' }}
             placeholder="Pesquise receitas aqui"
-            onChangeText={this.updateSearch}
-            value={search}
+            autoCorrect={false}
+            onChangeText={this.search}
+            value={this.state.searchText}
           />
         </View>
         <View style={styles.container}>
           <FlatList
-            data={this.state.data}
-            renderItem={({item}) => (
+            data={this.state.filteredData && this.state.filteredData.length > 0 ? this.state.filteredData : this.state.data}
+            renderItem={({ item }) => (
               <View style={styles.line}>
                 <Text style={styles.title}>{item.title}</Text>
-                <Image style={styles.image} source={{uri: item.image_url}} />            
+                <Image style={styles.image} source={{ uri: item.image_url }} />
                 <Text style={styles.publisher}>Publisher: {item.publisher}</Text>
-              </View>
+                <Icon onPress={() => this.setMultipleData(item)} color="#960000" size={35} name="heart" style={styles.icon}></Icon>              
+              </View>              
             )}
             keyExtractor={item => item.recipe_id}
           />
@@ -65,7 +99,7 @@ export default class Home extends Component {
 
         <View style={styles.button}>
           <Button
-            onPress={() => navigation.navigate('Favorites')}
+            onPress={() => { this.props.navigation.navigate("Favorites") }}
             icon={
               <Icon
                 name="heart"
@@ -86,10 +120,9 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   container: {
-
+    flex: 1
   },
   button: {
-    flex: 1,
     justifyContent: "flex-end"
 
   },
@@ -100,32 +133,38 @@ const styles = StyleSheet.create({
     borderBottomColor: "#960000",
     borderBottomWidth: 1,
     paddingLeft: 10,
-    flexDirection:"column"
+    flexDirection: "column"
   },
   image: {
     width: 100,
     height: 100,
     borderRadius: 20,
     marginRight: 10,
-    marginTop:10,
-    alignSelf:"flex-start",
+    marginTop: 10,
+    alignSelf: "flex-start",
 
   },
   info: {
-    alignSelf:"flex-end"
+    alignSelf: "flex-end"
   },
   title: {
-    fontSize:15,
+    fontSize: 15,
     fontWeight: "bold"
   },
   publisher: {
     flexDirection: "row",
-    alignItems:"flex-end",
+    alignItems: "flex-end",
     justifyContent: "flex-end",
     alignSelf: "flex-end",
     fontSize: 12,
     marginRight: 10,
-    paddingBottom:10,
+    paddingBottom: 10,
+  },
+  icon: {
+    position: "absolute",
+    right: 20,
+    top: 20,
+
   }
 
 

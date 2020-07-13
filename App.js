@@ -2,8 +2,8 @@ import React from 'react'
 import {NavigationContainer, } from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 
-import Home from './src/components/Home'
-import Favorites from './src/components/Favorites'
+import RecipesList from './src/screens/RecipesList'
+import FavoritesList from './src/screens/FavoritesList'
 
 const Stack = createStackNavigator()
 
@@ -12,8 +12,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
-          component={Home}
+          name="RecipesList"
+          component={RecipesList}
           options={{
             title: 'Forkify',
             headerStyle: {
@@ -25,7 +25,7 @@ export default function App() {
             headerTintColor: 
               '#fff',
           }} />
-        <Stack.Screen name="Favorites" component={Favorites} />
+        <Stack.Screen name="FavoritesList" component={FavoritesList} />
       </Stack.Navigator>
     </NavigationContainer>
   )
