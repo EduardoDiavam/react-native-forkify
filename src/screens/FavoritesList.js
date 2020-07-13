@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, FlatList, Image } from 'react-native'
-import { Button, SearchBar, ListItem } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet, FlatList} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 import Recipes from '../components/Recipes'
 

@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, FlatList, Image } from 'react-native'
+import { View, StyleSheet, FlatList } from 'react-native'
 import { Button, SearchBar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Recipes from '../components/Recipes'
-import FavoritesList from '../screens/FavoritesList'
 const initialState = {
     searchText: "",
     data: [],
