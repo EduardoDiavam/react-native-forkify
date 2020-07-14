@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList} from 'react-native'
+import { View, StyleSheet, FlatList } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 import Recipes from '../components/Recipes'
 
@@ -18,26 +18,24 @@ export default class FavoritesList extends Component {
         const stateString = await AsyncStorage.getItem('recipe')
         const favorites = JSON.parse(stateString) || initialState
         this.setState({ favorites: favorites })
-        console.log(favorites)
     }
 
     removeFavorite = recipe_id => {
         const clickedRecipie = this.state.favorites.filter(recipe => recipe.recipe_id === recipe_id);
         const favorites = this.state.favorites.filter(recipe => recipe.recipe_id !== recipe_id)
-        this.setState({favorites})
+        this.setState({ favorites })
         const updatedFavorities = [...this.state.favorites];
-        if(clickedRecipie){
+        if (clickedRecipie) {
             updatedFavorities.pop(clickedRecipie[0]);
-        }        
-        this.setState({favorites: updatedFavorities})
-        console.log("RecipesList -> updatedFavorities", updatedFavorities)
+        }
+        this.setState({ favorites: updatedFavorities })
         AsyncStorage.setItem('recipe', JSON.stringify(updatedFavorities))
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <FlatList
+                <FlatList style={styles.list}
                     data={this.state.favorites}
                     keyExtractor={item => item.recipe_id}
                     renderItem={({ item }) =>
@@ -51,6 +49,10 @@ export default class FavoritesList extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff7f7'
     },
+    list: {
+        marginTop: 10,
+    }
 }
 )
