@@ -26,7 +26,7 @@ export default class FavoritesList extends Component {
         this.setState({ favorites })
         const updatedFavorities = [...this.state.favorites];
         if (clickedRecipie) {
-            updatedFavorities.pop(clickedRecipie[0]);
+            updatedFavorities.splice(updatedFavorities.findIndex(recipe => recipe.recipe_id === recipe_id), 1)
         }
         this.setState({ favorites: updatedFavorities })
         AsyncStorage.setItem('recipe', JSON.stringify(updatedFavorities))

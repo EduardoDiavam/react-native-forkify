@@ -60,6 +60,7 @@ export default class RecipesList extends Component {
     favoriteRecipe = recipe_id => {
         const clickedRecipie = this.state.data.filter(recipe => recipe.recipe_id === recipe_id);
         const updatedFavorities = this.state.favorites;
+        const favorites = this.state.favorites;
         //Verifica se a receita clicada já não esta nos favoritos
         const added = updatedFavorities.filter(item => parseInt(item.recipe_id, 10) === parseInt(recipe_id, 10))
         //Só adiciona os favoritos se a receita já não estiver
